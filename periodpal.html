@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeriodPal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #ff0088;
+            color: #fff;
+            font-family: Times New Roman, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #f05593;
+            padding: 5px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+            color: #fff;
+        }
+
+        nav {
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 5px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: rgb(222, 46, 113);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 5px;
+            border: none;
+            background-color: rgb(230, 113, 144);
+            color: #fffafa;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            background-color: #fe0062;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        footer {
+            background-color: #f64ba6;
+            text-align: center;
+            padding: 1px 0; 
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>PeriodPal - your period tracker</h1>
+            <nav>
+                <router-link to="/">User Details</router-link>
+                <router-link to="/period-details">Period Details</router-link>
+                <router-link to="/health-insights">Health Insights</router-link>
+            </nav>
+        </header>
+        
+        <router-view></router-view>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-router@3.5.2/dist/vue-router.js"></script>
+    <script>
+        // Define components for different sections
+        const UserDetails = {
+            template: `
+                <div class="content">
+                    <h1>User Details</h1>
+                    <form>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" placeholder="Type in your name" required>
+
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" placeholder="Type in your age" required>
+
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="Type in your email" required>
+
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" id="phone" placeholder="Type in your phone number" required>
+
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            `,
+        };
+
+        const PeriodDetails = {
+            data() {
+                return {
+                    inCycleText: '',
+                    symptoms: {
+                        stomachPain: false,
+                        headache: false,
+                        backPain: false,
+                        restlessness: false,
+                        nausea: false,
+                    },
+                };
+            },
+            template: `
+                <div class="content">
+                    <h1>Your Period Details</h1>
+                    <form>
+                        <label for="PeriodDate">Select Date:</label>
+                        <input type="date" id="PeriodDate" required>
+
+                        <label for="inCycle">In Cycle:</label>
+                        <input type="text" id="inCycle" v-model="inCycleText" placeholder="Yes or No" required>
+
+                        <label>Symptoms:</label>
+                        <label for="stomachPain">Stomach Pain:</label>
+                        <input type="checkbox" id="stomachPain" v-model="symptoms.stomachPain">
+                        <label for="headache">Headache:</label>
+                        <input type="checkbox" id="headache" v-model="symptoms.headache">
+                        <label for="backPain">Back Pain:</label>
+                        <input type="checkbox" id="backPain" v-model="symptoms.backPain">
+                        <label for="restlessness">Restlessness:</label>
+                        <input type="checkbox" id="restlessness" v-model="symptoms.restlessness">
+                        <label for="nausea">Nausea:</label>
+                        <input type="checkbox" id="nausea" v-model="symptoms.nausea">
+
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            `,
+        };
+
+        const HealthInsights = {
+            template: `
+                <div class="content">
+                    <h1>Health Insights</h1>
+                    <p>Here are some health tips related to periods:</p>
+                    <ul>
+                        <li>Stay hydrated during your period to reduce bloating.</li>
+                        <li>Exercise can help relieve menstrual cramps and improve mood.</li>
+                        <li>Consider using a heating pad to soothe cramps.</li>
+                        <li>Eat a balanced diet with plenty of iron-rich foods to combat fatigue.</li>
+                        <li>Track your menstrual cycle to better understand your body.</li>
+                    </ul>
+                </div>
+            `,
+        };
+
+        // Create Vue Router instance and configure routes
+        const router = new VueRouter({
+            routes: [
+                { path: '/', component: UserDetails },
+                { path: '/period-details', component: PeriodDetails },
+                { path: '/health-insights', component: HealthInsights },
+            ],
+        });
+
+        const app = new Vue({
+            router,
+        }).$mount('#app');
+    </script>
+
+    <footer>
+        <p>&copy; 2023 PeriodPal</p>
+    </footer>
+</body>
+</html>
